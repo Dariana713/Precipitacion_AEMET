@@ -1,0 +1,25 @@
+#CODIGO ME DA ERROR
+
+// Load Landsat 8 data, filter by date, month, and bounds.
+var image = ee.ImageCollection ('COPERNICUS/S2')
+// Define visualization parameters in an object literal.
+var roi = ee.Geometry.Point([-122.1899, 37.5010]);  // Intersecting ROI
+
+// Also filter the collection by the CLOUD_COVER property.
+var filtered = image.filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', 20));
+var image_filtered_1 = image.filterDate('2019-01-01', '2020-01-01').filterBounds(roi)
+var visParams = {bands: ['B4', 'B3', 'B2'], max:0.3};
+Map.addLayer(image_filtered_1, visParams , 'true color composite');
+print('Collection filtered by time and location', image_filtered_1);
+
+// Define the visualization parameters.
+var vizParams1 = {
+  bands: ['B8', 'B4', 'B3'],
+  min: 0,
+  max: 0.5,
+  gamma: [0.95, 1.1, 1]
+};
+
+// Center the map and display the image.
+Map.setCenter(-122.1899, 37.5010, 10); // San Francisco Bay
+Map.addLayer(image_filtered_1, vizParams1, 'false color composite');
